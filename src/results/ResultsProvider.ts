@@ -14,6 +14,7 @@ export class ResultsProvider implements vscode.TreeDataProvider<TreeNode> {
 	}
 
 	updateWithRootTreeNode(node: TreeNode) {
+		console.log("updateWithRootTreeNode")
 		this.tree = node
 		this._onDidChangeTreeData.fire(null)
 	}
@@ -26,7 +27,11 @@ export class ResultsProvider implements vscode.TreeDataProvider<TreeNode> {
 				return Promise.resolve([])
 			}
 		} else {
-			return Promise.resolve(node.children)
+			let kids = node.children
+			if (kids.length === 1 && kids[0].children.length === 1 && kids[0].start?.file && node.type !== "hot-spots") {
+				kids = [{ ...kids[0], terseMessage: "Go", children: [] }, kids[0]]
+			}
+			return Promise.resolve(kids)
 		}
 	}
 

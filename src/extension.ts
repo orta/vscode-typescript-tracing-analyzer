@@ -1,6 +1,7 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode';
+import { createDecoratorsTracker } from './decorators';
 import { HelpProvider } from './help/HelpProvider';
 import { ResultsProvider } from './results/ResultsProvider';
 import { createRunner } from './runner';
@@ -15,6 +16,7 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.executeCommand('setContext', 'typescript-tracing-analyzer:showSidebar', true);
 
 	const runner = createRunner()
+	const decorator = createDecoratorsTracker(context, runner.resultsEmitter)
 
 	const resultsTreeViewProvider = new ResultsProvider(context, runner.resultsEmitter)
 	context.subscriptions.push(
