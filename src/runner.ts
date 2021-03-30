@@ -2,9 +2,8 @@ import * as vscode from "vscode"
 import * as cp from 'child_process';
 import * as path from 'path';
 import * as os from 'os';
-import type { TreeNode } from "./types";
+import type { TreeNode, TreeNodeJSON } from "./types";
 
-import {example} from "./vendor/example1"
 import { existsSync, readFileSync } from "fs";
 
 const execShell = (cmd: string) =>
@@ -18,7 +17,7 @@ const execShell = (cmd: string) =>
     });
 
 export const createRunner = () => {
-  const emitter = new vscode.EventEmitter<TreeNode>();
+  const emitter = new vscode.EventEmitter<TreeNodeJSON>();
   let lastFolder: undefined | vscode.Uri
 
   const run = async (tsTrace: vscode.Uri, settings: any) => {
@@ -30,11 +29,11 @@ export const createRunner = () => {
         opts.push(`--${key}`, settings[key])
       })
       const cmd = `node ${tracePath} ${tsTrace.fsPath} --json ${tmpDir} ${opts.join(" ")}`
-      console.log(cmd)
       await execShell(cmd)
     } catch (error) {
       console.log(error)
     }
+
     if (existsSync(tmpDir)) {
       const json = JSON.parse(readFileSync(tmpDir, "utf8"))
       console.log(json)

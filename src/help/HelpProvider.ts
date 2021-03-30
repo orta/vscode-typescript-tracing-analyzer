@@ -40,7 +40,6 @@ export class HelpProvider implements vscode.WebviewViewProvider {
         }
 
         case "re-run": {
-          console.log(3242334)
           this.runner.rerun(data.settings)
           break;
         }

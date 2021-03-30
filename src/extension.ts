@@ -6,6 +6,8 @@ import { HelpProvider } from './help/HelpProvider';
 import { ResultsProvider } from './results/ResultsProvider';
 import { createRunner } from './runner';
 
+let decorator;
+
 // this method is called when your extension is activated
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -16,7 +18,7 @@ export function activate(context: vscode.ExtensionContext) {
 	vscode.commands.executeCommand('setContext', 'typescript-tracing-analyzer:showSidebar', true);
 
 	const runner = createRunner()
-	const decorator = createDecoratorsTracker(context, runner.resultsEmitter)
+	decorator = createDecoratorsTracker(context, runner.resultsEmitter)
 
 	const resultsTreeViewProvider = new ResultsProvider(context, runner.resultsEmitter)
 	context.subscriptions.push(
